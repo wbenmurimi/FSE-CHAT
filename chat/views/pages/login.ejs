@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+	<% include ../partials/header.ejs %>
+
+	<title><%= title %></title>
+	<link rel='stylesheet' href='/stylesheets/style.css' />
+</head>
+<body>
+	<div class="container">
+		<% include ../partials/main_menu.ejs %>
+
+
+		<div class="container navigationSpace">
+			<div class="row">
+				<div class="col-md-8 col-md-offset-2">
+					<div class="panel panel-default">
+						<div class="panel-heading">Authentication</div>
+						<div class="panel-body">
+						
+						<center><p id="output" style="color: green;"></p></center>
+						<center><p id="output" style="color: green;"> <%= u_session %></p></center>
+						<ul class="nav nav-tabs nav-justified ">
+								<li class="active"><a data-toggle="tab" href="#home">Submit your name to join the chat</a></li>
+							</ul>
+
+							<div class="tab-content">
+								<div id="home" class="tab-pane fade in active">
+									<form class="form-horizontal" role="form" method="POST" action="user-login" style="margin-top: 30px;">
+
+										<div class="form-group">
+											<label for="chat_name" class="col-md-4 control-label">Chat Name</label>
+
+											<div class="col-md-6">
+												<input id="chat_name" type="text" class="form-control" name="chat_name" value="">
+
+											</div>
+										</div>
+
+										<div class="form-group">
+											<div class="col-md-6 col-md-offset-4">
+												<button type="button" class="btn btn-primary" id="loginbtn">
+													<i class="fa fa-btn fa-sign-in"></i> Join Chat
+												</button>
+											</div>
+										</div>
+									</form> 
+								</div>
+								
+							</div>
+							
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<% include ../partials/page_footer.ejs %>
+	</div>
+
+	<% include ../partials/footer.ejs %>
+
+
+  <script type="text/javascript">
+        // $(document).ready(function () {
+       
+
+            $('#loginbtn').click(function () {
+            	 // alert("content: ")
+                var payload = {
+                    name: $('#chat_name').val(),
+                    // password: $('#user_password').val()
+                };
+               
+                $.ajax({
+                    url: "/user-login",
+                    type: "POST",
+                    contentType: "application/json",
+                    processData: false,
+                    data: JSON.stringify(payload),
+                    complete: function (data) {
+                    	// alert(data)
+                    	window.location = "/chatroom";
+                        // $('#output').html(data.responseText);
+                    }
+                });
+            });
+        // });
+    </script>
+</body>
+</html>

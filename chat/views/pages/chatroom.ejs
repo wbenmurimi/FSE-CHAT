@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+	<% include ../partials/header.ejs %>
+
+	<title><%= title %></title>
+	<link rel='stylesheet' href='/stylesheets/style.css' />
+</head>
+<body>
+	<script type="text/javascript">
+
+	</script>
+	<div class="container">
+		<% include ../partials/main_menu.ejs %>
+
+		<div class="container navigationSpace">
+			<div class="row">
+				<div class="col-md-8 col-md-offset-2">
+					<div class="panel panel-default">
+						<div class="panel-heading"><b>Chat Room</b></div>
+						<div class="panel-body">
+
+							<center><p id="output" style="color: green;"> <%= u_session %></p></center>
+							<ul style="list-style: none;"  >
+								<% for (var i=0; i<messages.length; i++){%>
+
+								<li>
+								<div class="well well-sm"><p style="color: #2980b9;"><%= messages[i].name %></p>
+									<p><span><%= messages[i].message %></span><span class="pull-right" style="font-size: 10px;"><%= messages[i].posted_at %></span></p></div></li>
+
+									<%}%>
+								</ul>
+								<ul style="list-style: none;"  class="data_display" id="data_display">
+								</ul>
+
+
+								<form class="form" role="form" method="POST" action="/chat-message">
+									<div class="input-group">
+										<input id="name" type="hidden" class="form-control" value="<%= u_session %>">
+										<input id="message" type="text" class="form-control" placeholder="Message ....">
+										<span class="input-group-btn">
+											<button class="btn btn-default" type="button" id="btnsubmit">Send</button>
+										</span>
+									</div><!-- /input-group -->
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<% include ../partials/page_footer.ejs %>
+		</div>
+
+		<% include ../partials/footer.ejs %>
+		<script src="https://cdn.socket.io/socket.io-1.3.5.js"></script>
+		<script type="text/javascript">
+
+		var messages = [];
+		var socket = io.connect('http://localhost:3700');
+		var display_area = document.getElementById("data_display");
+		socket.on('message', function (data) {
+			
+			if(data.message) {
+				
+				messages.push(data);
+				var item = "";
+				for(var i=0; i<messages.length; i++) {
+
+					item+='<div class="well well-sm"><p style="color: #2980b9;">' + messages[i].name + '</p><p><span>' + messages[i].message+ '</span> <span class="pull-right" style="font-size: 10px;">' + messages[i].posted_at+'</span></p></div>';
+					
+				}
+				$("#data_display").empty();
+				$("#data_display").append(item);
+				
+			} else {
+				console.log("No data:", data);
+			}
+		});
+
+		$('#btnsubmit').click(function () {
+			message=$('#message').val(),
+			name= $('#name').val();
+			var currentdate = new Date(); 
+			var datetime = "" + currentdate.getDate() + "/"
+			+ (currentdate.getMonth()+1)  + "/" 
+			+ currentdate.getFullYear() + " @ "  
+			+ currentdate.getHours() + ":"  
+			+ currentdate.getMinutes() + ":" 
+			+ currentdate.getSeconds();
+			socket.emit('send', { message: message, name:name, posted_at:datetime });
+			console.log('MSG '+ message+'  BY '+name);
+		});
+
+        // $(document).ready(function () {
+        	$('#btnsubmit').click(function () {
+        		var currentdate = new Date(); 
+        		var datetime = "" + currentdate.getDate() + "/"
+        		+ (currentdate.getMonth()+1)  + "/" 
+        		+ currentdate.getFullYear() + " @ "  
+        		+ currentdate.getHours() + ":"  
+        		+ currentdate.getMinutes() + ":" 
+        		+ currentdate.getSeconds();
+        		var payload = {
+        			message: $('#message').val(),
+        			name: $('#name').val(),
+        			posted_at:datetime
+        		};
+
+        		$.ajax({
+        			url: "/chat-message",
+        			type: "POST",
+        			contentType: "application/json",
+        			processData: false,
+        			data: JSON.stringify(payload),
+        			complete: function (data) {
+                // 2nd call finished
+                $('#message').val('');
+
+            }
+        });
+        	});
+        // });
+        // });
+    </script>
+</body>
+</html>

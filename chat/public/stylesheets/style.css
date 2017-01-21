@@ -1,0 +1,43 @@
+body {
+  padding: 20px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a {
+  color: #00B7FF;
+}
+
+.main-color{
+background-color: #2980b9;
+
+}
+
+.iconlist li{
+	list-style: none;
+	display: inline-block;
+ color:white !important;
+}
+.iconlist li a{
+	margin-right: 40px;
+ color:white !important;
+}
+
+.navbar a{
+	color: white!important;
+}
+
+
+.nav li>a:hover {
+	background-color: #2980b9 !important;
+  border-bottom: 4px solid #ffffff !important;
+  
+}
+
+.navbar{
+	width: 100%;
+}
+
+.navigationSpace{
+	margin-top: 30px;
+}
+
